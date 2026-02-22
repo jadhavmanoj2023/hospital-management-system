@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Context } from "../main";
 import axios from "axios";
+import { API_BASE_URL } from "../utils/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ const Login = () => {
     try {
       await axios
         .post(
-          "http://localhost:5000/api/v1/user/login",
+          `${API_BASE_URL}/user/login`,
           { email, password, confirmPassword, role: "Admin" },
           {
             withCredentials: true,
@@ -46,8 +47,19 @@ const Login = () => {
     <>
       <section className="container form-component">
         <img src="/logo.png" alt="logo" className="logo" />
-        <h1 className="form-title">WELCOME TO ZEECARE</h1>
+        <h1 className="form-title">Welcome to Yashoda Hospitals</h1>
         <p>Only Admins Are Allowed To Access These Resources!</p>
+        <div
+          style={{
+            marginBottom: "1rem",
+            padding: "0.75rem",
+            background: "rgba(39, 23, 118, 0.08)",
+            borderRadius: "8px",
+            fontSize: "0.9rem",
+          }}
+        >
+          <strong>Demo (Admin):</strong> admin@admin.com / admin123
+        </div>
         <form onSubmit={handleLogin}>
           <input
             type="text"

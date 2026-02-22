@@ -3,6 +3,7 @@ import { Context } from "../main";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { API_BASE_URL } from "../utils/api";
 
 const AddNewAdmin = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
@@ -11,7 +12,7 @@ const AddNewAdmin = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [nic, setNic] = useState("");
+  const [aadhar, setAadhar] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
@@ -23,8 +24,8 @@ const AddNewAdmin = () => {
     try {
       await axios
         .post(
-          "http://localhost:5000/api/v1/user/admin/addnew",
-          { firstName, lastName, email, phone, nic, dob, gender, password },
+          `${API_BASE_URL}/user/admin/addnew`,
+          { firstName, lastName, email, phone, aadhar, dob, gender, password },
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
@@ -38,7 +39,7 @@ const AddNewAdmin = () => {
           setLastName("");
           setEmail("");
           setPhone("");
-          setNic("");
+          setAadhar("");
           setDob("");
           setGender("");
           setPassword("");
@@ -80,18 +81,20 @@ const AddNewAdmin = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
-              type="number"
-              placeholder="Mobile Number"
+              type="tel"
+              placeholder="Mobile Number (10 digits)"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              maxLength={10}
             />
           </div>
           <div>
             <input
-              type="number"
-              placeholder="NIC"
-              value={nic}
-              onChange={(e) => setNic(e.target.value)}
+              type="text"
+              placeholder="Aadhar Card (12 digits)"
+              value={aadhar}
+              onChange={(e) => setAadhar(e.target.value.replace(/\D/g, "").slice(0, 12))}
+              maxLength={12}
             />
             <input
               type={"date"}

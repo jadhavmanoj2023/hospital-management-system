@@ -9,47 +9,41 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import { Context } from "./main";
 import Login from "./Pages/Login";
+import api from "./utils/axios";
+
 const App = () => {
-  const { isAuthenticated, setIsAuthenticated, setUser } =
-    useContext(Context);
+  const { setIsAuthenticated, setUser } = useContext(Context);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/v1/user/patient/me",
-          {
-            withCredentials: true,
-          }
-        );
+        const { data } = await api.get("/user/patient/me");
         setIsAuthenticated(true);
-        setUser(response.data.user);
+        setUser(data.user);
       } catch (error) {
         setIsAuthenticated(false);
         setUser({});
       }
     };
+
     fetchUser();
-  }, [isAuthenticated]);
+  }, []); 
 
   return (
-    <>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/appointment" element={<Appointment />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-        <Footer />
-        <ToastContainer position="top-center" />
-      </Router>
-    </>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/appointment" element={<Appointment />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      <Footer />
+      <ToastContainer position="top-center" />
+    </Router>
   );
 };
 

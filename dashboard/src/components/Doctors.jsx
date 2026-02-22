@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Context } from "../main";
 import { Navigate } from "react-router-dom";
+import { API_BASE_URL } from "../utils/api";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -11,7 +12,7 @@ const Doctors = () => {
     const fetchDoctors = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/v1/user/doctors",
+          `${API_BASE_URL}/user/doctors`,
           { withCredentials: true }
         );
         setDoctors(data.doctors);
@@ -31,31 +32,34 @@ const Doctors = () => {
       <div className="banner">
         {doctors && doctors.length > 0 ? (
           doctors.map((element) => {
+            const dobDisplay = element.dob
+              ? new Date(element.dob).toISOString().slice(0, 10)
+              : "—";
             return (
-              <div className="card">
+              <div className="card" key={element._id}>
                 <img
-                  src={element.docAvatar && element.docAvatar.url}
+                  src={element.docAvatar?.url}
                   alt="doctor avatar"
                 />
-                <h4>{`${element.firstName} ${element.lastName}`}</h4>
+                <h4>{`${element.firstName ?? ""} ${element.lastName ?? ""}`}</h4>
                 <div className="details">
                   <p>
-                    Email: <span>{element.email}</span>
+                    Email: <span>{element.email ?? "—"}</span>
                   </p>
                   <p>
-                    Phone: <span>{element.phone}</span>
+                    Phone: <span>{element.phone ?? "—"}</span>
                   </p>
                   <p>
-                    DOB: <span>{element.dob.substring(0, 10)}</span>
+                    DOB: <span>{dobDisplay}</span>
                   </p>
                   <p>
-                    Department: <span>{element.doctorDepartment}</span>
+                    Department: <span>{element.doctorDepartment ?? "—"}</span>
                   </p>
                   <p>
-                    NIC: <span>{element.nic}</span>
+                    Aadhar: <span>{element.aadhar ?? "—"}</span>
                   </p>
                   <p>
-                    Gender: <span>{element.gender}</span>
+                    Gender: <span>{element.gender ?? "—"}</span>
                   </p>
                 </div>
               </div>

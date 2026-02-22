@@ -1,14 +1,14 @@
-import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import api from "../utils/axios";
 
 const AppointmentForm = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [nic, setNic] = useState("");
+  const [aadhar, setAadhar] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
@@ -33,8 +33,8 @@ const AppointmentForm = () => {
   const [doctors, setDoctors] = useState([]);
   useEffect(() => {
     const fetchDoctors = async () => {
-      const { data } = await axios.get(
-        "http://localhost:5000/api/v1/user/doctors",
+      const { data } = await api.get(
+        "/user/doctors",
         { withCredentials: true }
       );
       setDoctors(data.doctors);
@@ -46,14 +46,14 @@ const AppointmentForm = () => {
     e.preventDefault();
     try {
       const hasVisitedBool = Boolean(hasVisited);
-      const { data } = await axios.post(
-        "http://localhost:5000/api/v1/appointment/post",
+      const { data } = await api.post(
+        "/appointment/post",
         {
           firstName,
           lastName,
           email,
           phone,
-          nic,
+          aadhar,
           dob,
           gender,
           appointment_date: appointmentDate,
@@ -73,7 +73,7 @@ const AppointmentForm = () => {
         setLastName(""),
         setEmail(""),
         setPhone(""),
-        setNic(""),
+        setAadhar(""),
         setDob(""),
         setGender(""),
         setAppointmentDate(""),
@@ -114,18 +114,20 @@ const AppointmentForm = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
-              type="number"
-              placeholder="Mobile Number"
+              type="tel"
+              placeholder="Mobile Number (10 digits)"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              maxLength={10}
             />
           </div>
           <div>
             <input
-              type="number"
-              placeholder="NIC"
-              value={nic}
-              onChange={(e) => setNic(e.target.value)}
+              type="text"
+              placeholder="Aadhar Card (12 digits)"
+              value={aadhar}
+              onChange={(e) => setAadhar(e.target.value.replace(/\D/g, "").slice(0, 12))}
+              maxLength={12}
             />
             <input
               type="date"
