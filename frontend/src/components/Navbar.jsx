@@ -6,17 +6,22 @@ import { Context } from "../main";
 import api from "../utils/axios";
 
 const Navbar = () => {
-  const [show, setShow] = useState(false);
+  // false = menu visible (navLinks), true = menu hidden (showmenu with left: -100%)
+  const [show, setShow] = useState(true);
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
   const navigateTo = useNavigate();
 
   const handleLogout = async () => {
+    setShow(true); // close mobile menu
     try {
       const { data } = await api.get("/user/patient/logout");
       toast.success(data.message);
       setIsAuthenticated(false);
       navigateTo("/login");
     } catch (error) {
+      // Still log out locally so user is not stuck (e.g. cookie not sent cross-origin)
+      setIsAuthenticated(false);
+      navigateTo("/login");
       toast.error(
         error?.response?.data?.message || "Logout failed"
       );
@@ -24,6 +29,7 @@ const Navbar = () => {
   };
 
   const goToLogin = () => {
+    setShow(true); // close mobile menu
     navigateTo("/login");
   };
 
@@ -35,9 +41,9 @@ const Navbar = () => {
 
       <div className={show ? "navLinks showmenu" : "navLinks"}>
         <div className="links">
-          <Link to="/" onClick={() => setShow(false)}>Home</Link>
-          <Link to="/appointment" onClick={() => setShow(false)}>Appointment</Link>
-          <Link to="/about" onClick={() => setShow(false)}>About Us</Link>
+          <Link to="/" onClick={() => setShow(true)}>Home</Link>
+          <Link to="/appointment" onClick={() => setShow(true)}>Appointment</Link>
+          <Link to="/about" onClick={() => setShow(true)}>About Us</Link>
         </div>
 
         {isAuthenticated ? (
@@ -51,7 +57,7 @@ const Navbar = () => {
         )}
       </div>
 
-      <div className="hamburger" onClick={() => setShow(!show)}>
+      <div className="hamburger" onClick={() => setShow(!show)} aria-label="Toggle menu">
         <GiHamburgerMenu />
       </div>
     </nav>

@@ -18,6 +18,7 @@ const Sidebar = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
 
   const handleLogout = async () => {
+    setShow(false);
     await axios
       .get(`${API_BASE_URL}/user/admin/logout`, {
         withCredentials: true,
@@ -33,25 +34,27 @@ const Sidebar = () => {
 
   const navigateTo = useNavigate();
 
+  const closeSidebar = () => setShow(false);
+
   const gotoHomePage = () => {
     navigateTo("/");
-    setShow(!show);
+    closeSidebar();
   };
   const gotoDoctorsPage = () => {
     navigateTo("/doctors");
-    setShow(!show);
+    closeSidebar();
   };
   const gotoMessagesPage = () => {
     navigateTo("/messages");
-    setShow(!show);
+    closeSidebar();
   };
   const gotoAddNewDoctor = () => {
     navigateTo("/doctor/addnew");
-    setShow(!show);
+    closeSidebar();
   };
   const gotoAddNewAdmin = () => {
     navigateTo("/admin/addnew");
-    setShow(!show);
+    closeSidebar();
   };
 
   return (
